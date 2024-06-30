@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: clickhouse
+spec:
+  selector:
+    matchLabels:
+      app: clickhouse
+  serviceName: "clickhouse"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: clickhouse
+    spec:
+      containers:
+      - name: clickhouse
+        image: altinity/clickhouse-server:21.8.11.1.altinitystable
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: clickhouse-storage
+          mountPath: /var/lib/clickhouse
+  volumeClaimTemplates:
+  - metadata:
+      name: clickhouse-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse
+spec:
+  ports:
+  - port: 9000
+    targetPort: 9000
+  selector:
+    app: clickhouse
+  type: ClusterIP
+
+

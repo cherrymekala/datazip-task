@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: super
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: super
+  template:
+    metadata:
+      labels:
+        app: super
+    spec:
+      containers:
+      - name: super
+        image: apache/superset:1f8d991-dev
+        ports:
+        - containerPort: 8088
+        volumeMounts:
+        - name: superset-config
+          mountPath: /app/pythonpath/superset_config.py
+          subPath: superset_config.py
+      volumes:
+      - name: superset-config
+        configMap:
+          name: superset-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: super
+spec:
+  type: NodePort
+  ports:
+  - port: 8088
+    targetPort: 8088
+    nodePort: 30010
+  selector:
+    app: super
+
+

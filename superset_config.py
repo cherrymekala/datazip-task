@@ -1,0 +1,10 @@
+import os
+
+SECRET_KEY = os.getenv('SUPERSET_SECRET_KEY', 'h0f4Yj+dX+CyDHZd6pxSIbKF4JQV65isiBWZk0uECGNVpmo4ABjlnLBB')
+
+SQLALCHEMY_POOL_SIZE = 20
+SQLALCHEMY_MAX_OVERFLOW = 10
+
+SQLALCHEMY_DATABASE_URI = 'sqlite:////app/superset_home/superset.db'
+
+
